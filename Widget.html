@@ -1,0 +1,108 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+    .bot-sphere-main {
+        position: fixed; bottom: 25px; right: 25px; width: 65px; height: 65px;
+        background: #007bff; border-radius: 50%; display: flex;
+        justify-content: center; align-items: center; cursor: pointer;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 9999999;
+    }
+    .bot-sphere-main svg { width: 35px; fill: white; }
+
+    .bot-panel-main {
+        position: fixed; bottom: 100px; right: 25px; width: 340px; height: 500px;
+        background: white; border-radius: 20px; display: flex; flex-direction: column;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2); transform: scale(0);
+        transform-origin: bottom right; transition: 0.3s;
+        z-index: 9999998; overflow: hidden; border: 1px solid #ddd;
+    }
+    .bot-panel-main.bot-open { transform: scale(1); }
+
+    .bot-header-main { background: #007bff; color: white; padding: 15px; text-align: center; }
+    .bot-messages-area { flex: 1; padding: 15px; overflow-y: auto; background: #f9f9f9; display: flex; flex-direction: column; gap: 10px; }
+    
+    .bot-msg-bubble { padding: 10px 15px; border-radius: 15px; max-width: 80%; font-size: 14px; color: #333; line-height: 1.4; }
+    .bot-msg-bubble.bot { background: #eee; align-self: flex-start; }
+    .bot-msg-bubble.user { background: #007bff; color: white; align-self: flex-end; }
+
+    .bot-input-container { padding: 12px; display: flex; gap: 8px; border-top: 1px solid #eee; background: white; }
+    .bot-input-field { 
+        flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 20px; 
+        outline: none; background: white !important; color: black !important;
+        font-size: 14px !important; height: auto !important;
+    }
+    .bot-send-btn { background: #007bff; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
+</style>
+
+<div class="bot-sphere-main" id="botSphere">
+    <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M9,9V11H11V9H9M13,9V11H15V9H13M8,14V16H16V14H8Z" /></svg>
+</div>
+
+<div class="bot-panel-main" id="botPanel">
+    <div class="bot-header-main">
+        <span style="font-weight:bold">Asistent Virtual</span>
+        <button id="botClose" style="float:right; background:none; border:none; color:white; cursor:pointer; font-size:20px;">×</button>
+    </div>
+    <div class="bot-messages-area" id="botBox"></div>
+    <div class="bot-input-container">
+        <input type="text" id="botInput" class="bot-input-field" placeholder="Escriu aquí...">
+        <button id="botSend" class="bot-send-btn"><i class="fas fa-paper-plane"></i></button>
+    </div>
+</div>
+
+<script>
+(function() {
+    // 1. CANVIA AIXÒ PER LA TEVA URL DE NGROK ACTUAL
+    const URL_BACKEND = "https://postconsonantal-paityn-remonstratingly.ngrok-free.dev/"; 
+
+    const sphere = document.getElementById('botSphere');
+    const panel = document.getElementById('botPanel');
+    const box = document.getElementById('botBox');
+    const input = document.getElementById('botInput');
+    const btn = document.getElementById('botSend');
+    let first = true;
+
+    sphere.onclick = (e) => {
+        e.preventDefault();
+        panel.classList.toggle('bot-open');
+        if(first) {
+            addMsg("Hola! Sóc el xatbot d'aquesta web, en què et puc ajudar?", 'bot');
+            first = false;
+        }
+        setTimeout(() => input.focus(), 300);
+    };
+
+    document.getElementById('botClose').onclick = () => panel.classList.remove('bot-open');
+
+    function addMsg(txt, side) {
+        const d = document.createElement('div');
+        d.className = `bot-msg-bubble ${side}`;
+        d.innerText = txt;
+        box.appendChild(d);
+        box.scrollTop = box.scrollHeight;
+    }
+
+    async function enviar() {
+        const msg = input.value.trim();
+        if(!msg) return;
+
+        addMsg(msg, 'user');
+        input.value = '';
+
+        try {
+            const res = await fetch(`${URL_BACKEND}/chat`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: msg })
+            });
+            const data = await res.json();
+            addMsg(data.reply, 'bot');
+        } catch (e) {
+            addMsg("Error de connexió amb el xatbot.", "bot");
+        }
+    }
+
+    btn.onclick = enviar;
+    input.onkeypress = (e) => { if(e.key === 'Enter') enviar(); };
+})();
+</script>
