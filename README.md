@@ -1,4 +1,4 @@
-# 🤖 Projecte Xatbot - LAN Party EcoTech
+# 🤖 Projecte Xatbot - Talentosa 2026
 
 Aquest repositori conté el desenvolupament del xatbot d'intel·ligència artificial per a la **Talentosa**, creat dins del Repte 1.4 del cicle SMX. L'objectiu d'aquest xatbot és donar suport al portafolis de l'Edgar Bonet.
 
