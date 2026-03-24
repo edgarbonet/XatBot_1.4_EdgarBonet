@@ -1,4 +1,4 @@
-# Nova Funcionalitat: Crawler Web Dinàmic [1.2.0] - 2026-03-24
+## Nova Funcionalitat: Crawler Web Dinàmic [1.2.0] - 2026-03-24
 
 1. **Integració de BeautifulSoup4 i Requests:** S'ha implementat un sistema de web scraping que recorre automàticament el domini ebonet.inscastellbisbal.net.
 
@@ -14,7 +14,7 @@
 
 3. **Integració amb Frontend:** Configuració de la ruta /chat (mètode POST) per processar missatges JSON i retornar respostes de la IA.
 
-## 🛠️ Millores Tècniques
+## 🛠️ Millores Tècniques [1.2.0] - 2026-03-24
 
 1. **Neteja de dades:** El crawler s'ha optimitzat per eliminar elements irrellevants de la web (scripts, styles, nav, footer) i centrar-se només en el contingut textual útil.
 
@@ -22,6 +22,6 @@
 
 3. **Optimització del Prompt de Sistema:** Injecció dinàmica de les dades obtingudes del crawler directament a les "System Instructions".
 
-## 🛡️ Seguretat
+## 🛡️ Seguretat [1.2.0] - 2026-03-24
 
 **Token d'Autenticació:** Ús de userdata.get("NGROK_TOKEN") per gestionar la connexió del túnel de forma segura sense exposar credencials al codi fon
